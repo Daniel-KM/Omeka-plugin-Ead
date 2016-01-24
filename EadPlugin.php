@@ -30,6 +30,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Filters for the plugin.
      */
     protected $_filters = array(
+        'archive_folder_mappings',
         'oai_pmh_static_repository_mappings',
 //        'oai_pmh_static_repository_formats',
 //        'oai_pmh_repository_metadata_formats',
@@ -244,6 +245,21 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
                     break;
             }
         }
+    }
+
+    /**
+     * Add the mappings to convert metadata files into Omeka elements.
+     *
+     * @param array $mappings Available mappings.
+     * @return array Filtered mappings array.
+    */
+    public function filterArchiveFolderMappings($mappings)
+    {
+        $mappings['ead'] = array(
+            'class' => 'ArchiveFolder_Mapping_Ead',
+            'description' => __('EAD xml (Encoded Archival Description)'),
+        );
+        return $mappings;
     }
 
     /**
