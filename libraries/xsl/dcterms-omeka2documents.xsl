@@ -2,11 +2,17 @@
 <!--
 Map an intermediate xml file with dcterms and omeka elements to "documents".
 
-This is a simple copy, except that files are nested in items and that specific
-elements are renamed according to Omeka elements labels for EAD.
+This is a simple copy, except:
+- the root is changed from "records" to "documents";
+- files are nested inside items;
+- relations "Is Part Of" between item and file are removed;
+- the record type is added ("Item" or "File");
+- the item type "Archival Finding Aid" is added to the main record;
+- specific elements are renamed according to Omeka elements labels for EAD;
+- extra elements are moved to extra.
 
-@version: 20150817
-@copyright Daniel Berthereau, 2015
+@version: 20160125
+@copyright Daniel Berthereau, 2015-2016
 @license CeCILL v2.1 http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 @link https://github.com/Daniel-KM/Ead4Omeka
 -->
@@ -39,7 +45,10 @@ elements are renamed according to Omeka elements labels for EAD.
     </xsl:template>
 
     <xsl:template match="record" mode="item">
-        <record name="{dcterms:identifier[last()]}">
+        <record name="{dcterms:identifier[last()]}" recordType="Item">
+            <xsl:if test="@type = 'Finding Aid'">
+                <xsl:attribute name="itemType">Archival Finding Aid</xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="record" />
             <xsl:apply-templates select="../record
                     [@type = 'Digital Archival Object']
@@ -49,7 +58,7 @@ elements are renamed according to Omeka elements labels for EAD.
     </xsl:template>
 
     <xsl:template match="record" mode="file">
-        <record file="{dcterms:identifier[last()]}">
+        <record file="{dcterms:identifier[last()]}" recordType="File">
             <xsl:apply-templates select="." mode="record" />
         </record>
     </xsl:template>
@@ -91,7 +100,7 @@ elements are renamed according to Omeka elements labels for EAD.
                     </xsl:choose>
                 </xsl:when>
 
-                <!-- Conversion to elements for others. -->
+                <!-- Conversion to elements for others (namespace "omeka"). -->
                 <xsl:otherwise>
                     <xsl:variable name="name_space">
                         <xsl:apply-templates select="../@type" mode="element_set_name">
@@ -99,27 +108,51 @@ elements are renamed according to Omeka elements labels for EAD.
                         </xsl:apply-templates>
                     </xsl:variable>
 
-                    <xsl:if test="$name_space != ''">
-                        <xsl:variable name="elements">
-                            <xsl:for-each-group select="../*[namespace-uri() = current()]" group-by="name()">
-                                <xsl:variable name="label" as="xs:string?"
-                                    select="$mapping/elementSet/map[@to = current-grouping-key()]/@label" />
-                                <element name="{$label}">
-                                    <xsl:for-each select="current-group()">
-                                        <data>
-                                            <xsl:sequence select="node()" />
-                                        </data>
-                                    </xsl:for-each>
-                                </element>
-                            </xsl:for-each-group>
-                        </xsl:variable>
+                    <xsl:choose>
+                        <!-- Extra and standard elements are the same, but without element set. -->
+                        <!-- Currently, may be used only for omeka:xpath. -->
+                        <xsl:when test="$name_space = 'extra'">
+                            <xsl:variable name="elements">
+                                <xsl:for-each-group select="../*[namespace-uri() = current()]" group-by="name()">
+                                    <xsl:variable name="label" as="xs:string?"
+                                        select="$mapping/elementSet/map[@to = current-grouping-key()]/@label" />
+                                    <extra name="{$label}">
+                                        <xsl:for-each select="current-group()">
+                                            <data>
+                                                <xsl:sequence select="node()" />
+                                            </data>
+                                        </xsl:for-each>
+                                    </extra>
+                                </xsl:for-each-group>
+                            </xsl:variable>
 
-                        <xsl:if test="count($elements/node()) &gt; 0">
-                            <elementSet name="{$name_space}" >
+                            <xsl:if test="count($elements/node()) &gt; 0">
                                 <xsl:sequence select="$elements" />
-                            </elementSet>
-                        </xsl:if>
-                    </xsl:if>
+                            </xsl:if>
+                        </xsl:when>
+
+                        <xsl:when test="$name_space != ''">
+                            <xsl:variable name="elements">
+                                <xsl:for-each-group select="../*[namespace-uri() = current()]" group-by="name()">
+                                    <xsl:variable name="label" as="xs:string?"
+                                        select="$mapping/elementSet/map[@to = current-grouping-key()]/@label" />
+                                    <element name="{$label}">
+                                        <xsl:for-each select="current-group()">
+                                            <data>
+                                                <xsl:sequence select="node()" />
+                                            </data>
+                                        </xsl:for-each>
+                                    </element>
+                                </xsl:for-each-group>
+                            </xsl:variable>
+
+                            <xsl:if test="count($elements/node()) &gt; 0">
+                                <elementSet name="{$name_space}" >
+                                    <xsl:sequence select="$elements" />
+                                </elementSet>
+                            </xsl:if>
+                        </xsl:when>
+                    </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:for-each>

@@ -69,6 +69,7 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
 
         // Now, the xml is a standard document, so process it with the class.
         $documents = $this->_mappingDocument->listDocuments($xmlpath);
+
         // Reset each intermediate xml metadata by the original one.
         $this->_setXmlMetadata();
     }
@@ -79,6 +80,11 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
     protected function _setXmlMetadata()
     {
         $documents = &$this->_processedFiles[$this->_metadataFilepath];
+
+        if (empty($documents)) {
+            $message = __('The EAD file "%s" cannot be processed [last step].', $this->_metadataFilepath);
+            throw new ArchiveFolder_BuilderException($message);
+        }
 
         // Prepare the list of parts via the stylesheet.
 
@@ -94,18 +100,21 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
         // By construction (see xsl), the root is the string before "/ead/eadheader".
         // TODO Warning: the root path may contain '/ead/eadheader' before,
         // even if this is very rare.
-        $pathPos = strpos($documents[0]['name'], '/ead/eadheader');
+        $pathPos = strpos($documents[0]['process']['name'], '/ead/eadheader');
 
         foreach ($documents as &$document) {
-            $partPath = isset($document['metadata']['extra']['XPath'][0])
-                ? $document['metadata']['extra']['XPath'][0]
-                : substr($document['name'], $pathPos);
-            $document['xml'] = $this->_getXmlPart($partsPath, $partPath);
+            $partPath = isset($document['extra']['XPath'][0])
+                ? $document['extra']['XPath'][0]
+                : substr($document['process']['name'], $pathPos);
+            $document['process']['xml'] = $this->_getXmlPart($partsPath, $partPath);
+            if (empty($document['files'])) {
+                continue;
+            }
             foreach ($document['files'] as &$file) {
-                $partPath = isset($file['metadata']['extra']['XPath'][0])
-                    ? $file['metadata']['extra']['XPath'][0]
+                $partPath = isset($file['extra']['XPath'][0])
+                    ? $file['extra']['XPath'][0]
                     : '';
-                $file['xml'] = $this->_getXmlPart($partsPath, $partPath);
+                $file['process']['xml'] = $this->_getXmlPart($partsPath, $partPath);
             }
         }
     }
