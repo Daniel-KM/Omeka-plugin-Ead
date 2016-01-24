@@ -46,7 +46,8 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
             ->id;
 
         // Avoid heavy process and no level.
-        $this->_maxLevel = (integer) get_option('ead_max_level') ?: 100;
+        $maxLevel = (integer) get_option('ead_max_level');
+        $this->_maxLevel =  $maxLevel > $this->_maxLevel ? $this->_maxLevel : $maxLevel;
     }
 
     /**
@@ -467,7 +468,6 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
         if (empty($item)) {
             return false;
         }
-
         return $item->item_type_id == $this->_idFindingAid;
     }
 
@@ -544,7 +544,7 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
         $ancestors = $this->ancestors($item);
         $records = empty($ancestors)
             ? array()
-            : get_records('Item', array('id' => $ancestors));
+            : $this->_getRecords('Item', $ancestors);
 
         return common('ead-ancestors', array(
             'item' => $item,
@@ -655,7 +655,7 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
         $siblings = $this->siblings($item);
         $records = empty($siblings)
             ? array()
-            : get_records('Item', array('id' => $siblings), null);
+            : $this->_getRecords('Item', $siblings);
 
         return common('ead-siblings', array(
             'item' => $item,
@@ -684,7 +684,7 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
         $children = $this->children($item);
         $records = empty($children)
             ? array()
-            : get_records('Item', array('id' => $children), null);
+            : $this->_getRecords('Item', $children);
 
         return common('ead-children', array(
             'item' => $item,
@@ -849,5 +849,23 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
             'tree' => $tree,
             'itemId' => $itemId,
         ));
+    }
+
+    /**
+     * Helper to get a list of records from a list of ids.
+     *
+     * @internal The standard Omeka doesn't seem to allow to get items by a list
+     * of ids.
+     *
+     * @param string $recordType
+     * @param  array $ids A list of ids.
+     * @return array Array of objects.
+     */
+    protected function _getRecords($recordType, $ids)
+    {
+        $table = $this->_db->getTable($recordType);
+        $alias = $table->getTableAlias();
+        $ids = array_filter(array_map('intval', $ids));
+        return $table->findBySql($alias . '.id IN (' . implode(',', $ids) . ')');
     }
 }
