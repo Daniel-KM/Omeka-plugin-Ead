@@ -12,8 +12,8 @@ each item.
 
 Nevertheless, the plugin allows to import and export EAD xml files via some
 other optional plugins. Mappings are ready for:
-- [Archive Folder], convert an EAD xml file and attached files into a OAI-PMH
-static repository, that can be managed via the plugin [OAI-PMH Gateway];
+- [OAI-PMH Static Repository] convert an EAD xml file and attached files into an
+OAI-PMH static repository, that can be managed via the plugin [OAI-PMH Gateway];
 - [OAI-PMH Harvester] import EAD metadata from OAI-PMH servers, but the
 structure is not rebuilt;
 - [OAI-PMH Repository] allows to expose EAD metadata via OAI-PMH (to be
@@ -39,9 +39,10 @@ For testing purposes, the official EAD examples can be imported easily.
 - Copy the files "ead_example_1.xml" and "ead_example_2.xml" that are in the
 folder "samples" of the tool [Ead2DCterms] in a directory that the server can
 access (check rights).
-- Go to Archive Folder > Add a new archive folder, fill the url to the directory
-where are the previous files. Default options are fine, but you can change them
-as long as you keep the format "Document" for the harvesting.
+- Go to OAI-PMH Static Repositories > Add a new OAI-PMH Static Repository, fill
+the url to the directory where are the previous files. Default options are fine,
+but you can change them as long as you keep the format "Document" for the
+harvesting.
 - Click Add Folder, then "Check" and, if no error, "Update", and wait a minute.
 - Browse your items!
 
@@ -126,7 +127,7 @@ TODO
 Installation
 ------------
 
-Install the required plugins [Dublin Core Extended] and [Archive Folder Document].
+Install the required plugins [Dublin Core Extended] and [Archive Document].
 
 Uncompress files and rename plugin folder "Ead".
 
@@ -138,7 +139,7 @@ Keep the main directory "Ead2DCterms".
 
 Then install it like any other Omeka plugin.
 
-To import metadata, the following recommended plugins are needed: [Archive Folder],
+To import metadata, the following recommended plugins are needed: [OAI-PMH Static Repository],
 [OAI-PMH Gateway], [OAI-PMH Harvester], [OAI-PMH Repository] and optionally
 [Archive Repertory].
 
@@ -153,20 +154,11 @@ only xslt 2 currently. Anyway, it's ten times faster than the xslt 1 processor
 included in php. The other solution, to use an integrated binding such as
 [Saxon-C], is not supported currently.
 
-Set the command to this processor inside the Archive Folder config page (see
-the install paragraph of the readme of [Archive Folder]).
+Set the command to this processor inside the OAI-PMH Static Repository config
+page (see the install paragraph of the readme of [OAI-PMH Static Repository]).
 
-If [Archive Folder] is used, read all the remarks, in particular for files path
-and extensions.
-
-
-Warning
--------
-
-Use it at your own risk.
-
-It's always recommended to backup your files and database so you can roll back
-if needed.
+If [OAI-PMH Static Repository] is used, read all the remarks, in particular for
+files path and extensions.
 
 
 Warning
@@ -224,7 +216,7 @@ Copyright
 [Ead]: https://github.com/Daniel-KM/Ead4Omeka
 [Omeka]: https://omeka.org
 [Encoded Archival Description]: https://loc.gov/ead/index.html
-[Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
+[OAI-PMH Static Repository]: https://github.com/Daniel-KM/OaiPmhStaticRepository
 [OAI-PMH Gateway]: https://github.com/Daniel-KM/OaiPmhGateway
 [OAI-PMH Harvester]: https://github.com/Daniel-KM/OaipmhHarvester
 [OAI-PMH Repository]: https://omeka.org/add-ons/plugins/oai-pmh-repository
@@ -235,7 +227,7 @@ Copyright
 [Saxonica]: http://www.saxonica.com/download/opensource.xml
 [Saxon-C]: http://www.saxonica.com/saxon-c/index.xml
 [Dublin Core Extended]: https://github.com/Daniel-KM/DublinCoreExtended
-[Archive Folder Document]: https://github.com/Daniel-KM/ArchiveFolderDocument
+[Archive Document]: https://github.com/Daniel-KM/ArchiveDocument
 [Archive Repertory]: https://github.com/Daniel-KM/ArchiveRepertory
 [plugin issues]: https://github.com/Daniel-KM/Ead4Omeka/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html

@@ -4,7 +4,7 @@
  *
  * @package Ead
  */
-class ArchiveFolder_Format_Ead extends ArchiveFolder_Format_Abstract
+class OaiPmhStaticRepository_Format_Ead extends OaiPmhStaticRepository_Format_Abstract
 {
     const METADATA_PREFIX = 'ead';
     const METADATA_SCHEMA = 'http://www.loc.gov/ead/ead.xsd';

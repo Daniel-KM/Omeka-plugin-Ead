@@ -9,7 +9,7 @@
 /**
  * The EAD plugin.
  *
- * @package Omeka\Plugins\DublinCoreExtended
+ * @package Omeka\Plugins\Ead
  */
 class EadPlugin extends Omeka_Plugin_AbstractPlugin
 {
@@ -30,8 +30,8 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Filters for the plugin.
      */
     protected $_filters = array(
-        'archive_folder_mappings',
-//        'archive_folder_formats',
+        'oai_pmh_static_repository_mappings',
+//        'oai_pmh_static_repository_formats',
 //        'oai_pmh_repository_metadata_formats',
         'oai_pmh_harvester_maps',
     );
@@ -242,10 +242,10 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      * @param array $mappings Available mappings.
      * @return array Filtered mappings array.
     */
-    public function filterArchiveFolderMappings($mappings)
+    public function filterOaiPmhStaticRepositoryMappings($mappings)
     {
         $mappings['ead'] = array(
-            'class' => 'ArchiveFolder_Mapping_Ead',
+            'class' => 'OaiPmhStaticRepository_Mapping_Ead',
             'description' => __('EAD xml'),
         );
 
@@ -260,11 +260,11 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      * @param array $metadataFormats Metadata formats array.
      * @return array Filtered metadata formats array.
     */
-    public function filterArchiveFolderFormats($formats)
+    public function filterOaiPmhStaticRepositoryFormats($formats)
     {
         $formats['ead'] = array(
             'prefix' => 'ead',
-            'class' => 'ArchiveFolder_Format_Ead',
+            'class' => 'OaiPmhStaticRepository_Format_Ead',
             'description' => __('EAD (Encoded Archival Description)'),
         );
 

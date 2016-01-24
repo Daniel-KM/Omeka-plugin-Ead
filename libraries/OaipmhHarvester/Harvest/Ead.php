@@ -128,8 +128,8 @@ class OaipmhHarvester_Harvest_Ead extends OaipmhHarvester_Harvest_Abstract
     }
 
    /**
-     * Ingest specific data and fire the hook "archive_folder_ingest_extra" for
-     * the item and each file.
+     * Ingest specific data and fire the hook "oai_pmh_static_repository_ingest_extra"
+     * for the item and each file.
      *
      * @param Record $record
      * @param array $harvestedRecord
@@ -145,8 +145,8 @@ class OaipmhHarvester_Harvest_Ead extends OaipmhHarvester_Harvest_Abstract
 
     /**
      * The next functions are used to process xslt and are copied from the
-     * plugin Archive Folder. They will be removed when an interface will be
-     * built. Last one may be updated inside the plugin.
+     * plugin OAI-PMH Static Repository. They will be removed when an interface
+     * will be built. Last one may be updated inside the plugin.
      * TODO Merge interface.
      */
 
@@ -162,7 +162,7 @@ class OaipmhHarvester_Harvest_Ead extends OaipmhHarvester_Harvest_Abstract
      */
     protected function _processXslt($input, $stylesheet, $output = '', $parameters = array())
     {
-        $command = get_option('archive_folder_processor');
+        $command = get_option('oai_pmh_static_repository_processor');
 
         // Default is the internal xslt processor of php.
         return empty($command)
@@ -186,7 +186,7 @@ class OaipmhHarvester_Harvest_Ead extends OaipmhHarvester_Harvest_Abstract
             $output = tempnam(sys_get_temp_dir(), 'omk_');
         }
 
-        $command = get_option('archive_folder_processor');
+        $command = get_option('oai_pmh_static_repository_processor');
 
         $command = sprintf($command, escapeshellarg($input), escapeshellarg($stylesheet), escapeshellarg($output));
         foreach ($parameters as $name => $parameter) {
@@ -269,7 +269,7 @@ class OaipmhHarvester_Harvest_Ead extends OaipmhHarvester_Harvest_Abstract
      *
      * @todo Fully manage cdata
      *
-     * @see ArchiveFolder_Mapping_Document::_innerXML()
+     * @see OaiPmhStaticRepository_Mapping_Document::_innerXML()
      *
      * @param SimpleXml $xml
      * @return string

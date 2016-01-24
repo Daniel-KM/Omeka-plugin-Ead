@@ -4,7 +4,7 @@
  *
  * @package Ead
  */
-class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
+class OaiPmhStaticRepository_Mapping_Ead extends OaiPmhStaticRepository_Mapping_Abstract
 {
     const XML_ROOT = 'ead';
     const XML_PREFIX = 'ead';
@@ -35,7 +35,7 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
             . DIRECTORY_SEPARATOR . 'Ead'
             . DIRECTORY_SEPARATOR . $this->_xslParts;
 
-        $this->_mappingDocument = new ArchiveFolder_Mapping_Document($uri, $parameters);
+        $this->_mappingDocument = new OaiPmhStaticRepository_Mapping_Document($uri, $parameters);
 
         parent::__construct($uri, $parameters);
     }
