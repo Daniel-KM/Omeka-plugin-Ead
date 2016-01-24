@@ -68,6 +68,16 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookInstall()
     {
+        $lib = dirname(__FILE__)
+            . DIRECTORY_SEPARATOR . 'libraries'
+            . DIRECTORY_SEPARATOR . 'external'
+            . DIRECTORY_SEPARATOR . 'Ead2DCterms'
+            . DIRECTORY_SEPARATOR . 'ead2dcterms.xsl';
+        if (!file_exists($lib)) {
+            throw new Omeka_Plugin_Exception(__('EAD2DCTerms library should be installed. See %sReadme%s.',
+                '<a href="https://github.com/Daniel-KM/Ead4Omeka#installation">', '</a>'));
+        }
+
         // Load elements to add.
         require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'elements.php';
 

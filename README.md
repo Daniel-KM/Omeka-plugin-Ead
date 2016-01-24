@@ -154,6 +154,8 @@ only xslt 2 currently. Anyway, it's ten times faster than the xslt 1 processor
 included in php. The other solution, to use an integrated binding such as
 [Saxon-C], is not supported currently.
 
+Note that under Debian, Saxon 9.6 and 9.7 don't work, so use Saxon 9.5.
+
 Set the command to this processor inside the OAI-PMH Static Repository config
 page (see the install paragraph of the readme of [OAI-PMH Static Repository]).
 
