@@ -2,8 +2,6 @@
 /**
  * Metadata format map for the EAD format.
  *
- * @todo Check if some contents can be added to METS format.
- *
  * @package Ead
  */
 class ArchiveFolder_Format_Ead extends ArchiveFolder_Format_Abstract
@@ -17,15 +15,10 @@ class ArchiveFolder_Format_Ead extends ArchiveFolder_Format_Abstract
     protected $_metadataNamespace = self::METADATA_NAMESPACE;
 
     protected $_parametersFormat = array(
-        'use_qdc' => true,
+        'use_dcterms' => true,
         'link_to_files' => true,
         'support_separated_files' => true,
     );
-
-    public function __construct($parameters, $writer)
-    {
-        parent::__construct($parameters, $writer);
-    }
 
     protected function _fillMetadata($record = null)
     {
