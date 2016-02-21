@@ -83,7 +83,7 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
 
         if (empty($documents)) {
             $message = __('The EAD file "%s" cannot be processed [last step].', $this->_metadataFilepath);
-            throw new ArchiveFolder_BuilderException($message);
+            throw new ArchiveFolder_Exception($message);
         }
 
         // Prepare the list of parts via the stylesheet.
