@@ -2,7 +2,7 @@
 /**
  * Ead
  *
- * @copyright Copyright 2015 Daniel Berthereau
+ * @copyright Copyright 2015-2016 Daniel Berthereau
  * @license https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
  */
 
@@ -31,6 +31,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_filters = array(
         'archive_folder_mappings',
+        'archive_folder_add_parameters',
         'oai_pmh_static_repository_mappings',
 //        'oai_pmh_static_repository_formats',
 //        'oai_pmh_repository_metadata_formats',
@@ -260,6 +261,72 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
             'description' => __('EAD xml (Encoded Archival Description)'),
         );
         return $mappings;
+    }
+
+    /**
+     * Add parameters to the main form.
+     *
+     * @param ArchiveFolder_Form_Add $form
+     * @return $form
+     */
+    public function filterArchiveFolderAddParameters($form)
+    {
+        $form->addElement('select', 'ead_base_id', array(
+            'label' => __('Base ids'),
+            'description' => __('Each item inside an EAD xml file is represented by a unique id, that is used to make relations between all items.')
+                . ' ' . __('The base id is the first part of this id.')
+                . ' ' . __('Default is the full document uri.'),
+            'multiOptions' => array(
+                'documentUri' => __('Document uri'),
+                'basename' => __('Filename'),
+                'filename' => __('Filename without extension'),
+                'eadid' => __('Value of element "eadid"'),
+                'publicid' => __('Attribute "publicid" of "eadid"'),
+                'identifier' => __('Attribute "identifier" of "eadid"'),
+                'url' => __('Attribute "url" of "eadid"'),
+                'custom' => __('Custom, in the field below'),
+            ),
+            'value' => 'documentUri',
+        ));
+
+        $form->addElement('textarea', 'ead_base_ids', array(
+            'description' => __('If "custom" is selected, specify the base ids to use, one by line, for each EAD xml file.')
+                . ' ' . __('The base id should be linked to one of the attributes of the "eadid" element: "publicid", "identifier" or "url".'),
+            'value' => '',
+            'required' => false,
+            'rows' => 5,
+            'placeholder' => __('attribute value = base id of the file'),
+            'filters' => array(
+                'StringTrim',
+            ),
+            'validators' => array(
+                array(
+                    'callback',
+                    false,
+                    array(
+                        'callback' => array('ArchiveFolder_Form_Validator', 'validateExtraParameters'),
+                    ),
+                    'messages' => array(
+                        Zend_Validate_Callback::INVALID_VALUE => __('Each base id, one by line, should have a name separated from the value with a "=".'),
+                    ),
+                ),
+            ),
+        ));
+
+        $form->addDisplayGroup(
+            array(
+                'ead_base_id',
+                'ead_base_ids',
+            ),
+            'archive_folder_ead',
+            array(
+                'legend' => __('EAD'),
+                'description' => __('Set specific parameters for EAD.')
+                    . ' ' . __('All parameters are set in the file "ead2dcterms-omeka_config.xml".')
+                    . ' ' . __('To use another file, set its full path as "configuration = https://example.org/full/path/to/custom-config.xml" in extra parameters.'),
+        ));
+
+        return $form;
     }
 
     /**

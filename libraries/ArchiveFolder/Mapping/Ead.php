@@ -19,6 +19,7 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
     protected $_xslMain = 'libraries/external/Ead2DCterms/ead2dcterms-omeka.xsl';
     protected $_xslSecondary = 'libraries/xsl/dcterms-omeka2documents.xsl';
     protected $_xslParts = 'libraries/xsl/ead_parts.xsl';
+    protected $_xmlConfig = 'libraries/external/Ead2DCterms/ead2dcterms-omeka_config.xml';
 
     // EAD converts itself into the "documents" format.
     private $_mappingDocument = null;
@@ -34,6 +35,9 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
         $this->_xslParts = PLUGIN_DIR
             . DIRECTORY_SEPARATOR . 'Ead'
             . DIRECTORY_SEPARATOR . $this->_xslParts;
+        $this->_xmlConfig = PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'Ead'
+            . DIRECTORY_SEPARATOR . $this->_xmlConfig;
 
         $this->_mappingDocument = new ArchiveFolder_Mapping_Document($uri, $parameters);
 
@@ -52,11 +56,44 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
         // processed directly via SimpleXml.
         $this->_xml = simplexml_load_file($this->_metadataFilepath, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
         if ($this->_xml === false) {
-            return;
+            $message = __('The file "%s" is not xml.', $this->_metadataFilepath);
+            throw new ArchiveFolder_Exception($message);
         }
 
+        $this->_xml->registerXPathNamespace(self::XML_PREFIX, self::XML_NAMESPACE);
+
+        $extraParameters = $this->_getParameter('extra_parameters');
+
+        // Set the default file for the configuration.
+        $configuration = empty($extraParameters['configuration'])
+            ? $this->_xmlConfig
+            : $extraParameters['configuration'];
+
+        // Set the base id in the config file.
+        $tempConfig = tempnam(sys_get_temp_dir(), 'ead2dcterms_');
+        $result = copy($configuration, $tempConfig);
+        if (empty($result)) {
+            $message = __('Error during copy of the configuration file from "%s" into "%s".',
+                $configuration, $tempConfig);
+            throw new ArchiveFolder_Exception($message);
+        }
+
+        $configuration = $tempConfig;
+
+        // In fact, if it is the same than the "baseid", it's useless, but it's
+        // simpler to set it always.
+        $baseIdXml = $this->_getBaseIdXml();
+        $result = $this->_updateConfig($configuration, $baseIdXml);
+        if (empty($result)) {
+            $message = __('Error during update of the element "baseid" in the configuration file "%s".',
+                $configuration);
+            throw new ArchiveFolder_Exception($message);
+        }
+
+        $extraParameters['configuration'] = $configuration;
+
         // Process the xml file via the stylesheet.
-        $intermediatePath = $this->_processXslt($this->_metadataFilepath, $this->_xslMain);
+        $intermediatePath = $this->_processXslt($this->_metadataFilepath, $this->_xslMain, '', $extraParameters);
         if (filesize($intermediatePath) == 0) {
             return;
         }
@@ -72,6 +109,103 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
 
         // Reset each intermediate xml metadata by the original one.
         $this->_setXmlMetadata();
+    }
+
+    /**
+     * Get the base id from the parameters.
+     *
+     * @return array Attributes of the "base_id" element.
+     */
+    protected function _getBaseIdXml()
+    {
+        $baseIdXml = array();
+
+        $baseId = $this->_getParameter('ead_base_id');
+        switch ($baseId) {
+            case 'documentUri':
+            default:
+                $baseIdXml['from'] = '';
+                $baseIdXml['default'] =$this->_metadataFilepath;
+                break;
+            case 'basename':
+                $baseIdXml['from'] = '';
+                $baseIdXml['default'] = pathinfo($this->_metadataFilepath, PATHINFO_BASENAME);
+                break;
+            case 'filename':
+                $baseIdXml['from'] = '';
+                $baseIdXml['default'] = pathinfo($this->_metadataFilepath, PATHINFO_FILENAME);
+                break;
+            case 'eadid':
+                $baseIdXml['from'] = '/ead/eadheader/eadid';
+                $baseIdXml['default'] =$this->_metadataFilepath;
+                break;
+            case 'publicid':
+                $baseIdXml['from'] = '/ead/eadheader/eadid/@publicid';
+                $baseIdXml['default'] =$this->_metadataFilepath;
+                break;
+            case 'identifier':
+                $baseIdXml['from'] = '/ead/eadheader/eadid/@identifier';
+                $baseIdXml['default'] =$this->_metadataFilepath;
+                break;
+            case 'url':
+                $baseIdXml['from'] = '/ead/eadheader/eadid/@url';
+                $baseIdXml['default'] =$this->_metadataFilepath;
+                break;
+            case 'custom':
+                $baseIdXml['from'] = '';
+                $baseIds = $this->_getParameter('ead_base_ids');
+                $baseIds = $this->_stringParametersToArray($baseIds);
+                $xpath = '/ead:ead/ead:eadheader/ead:eadid';
+                $result = $this->_xml->xpath($xpath);
+                $result = json_decode(json_encode($result), true);
+                $result = $result[0]['@attributes'];
+                $result = array_intersect(array_keys($baseIds), $result);
+                if ($result) {
+                    $result = array_shift($result);
+                    $baseIdXml['default'] = $baseIds[$result];
+                }
+                // Unknown identifier.
+                else {
+                    $baseIdXml['default'] = $this->_metadataFilepath;
+                }
+                break;
+        }
+        $baseIdXml = array_map('xml_escape', $baseIdXml);
+        return $baseIdXml;
+    }
+
+    protected function _updateConfig($configuration, $baseIdXml)
+    {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $result = $dom->load($configuration);
+        if (empty($result)) {
+            return false;
+        }
+
+        $root = $dom->documentElement;
+        $xpath = new DOMXPath($dom);
+
+        $element = $xpath->query('/config/baseid')->item(0);
+        $element->setAttribute('from', $baseIdXml['from']);
+        $element->setAttribute('default', $baseIdXml['default']);
+
+        // Because this is a temp file, the full path should be set when needed.
+        $element = $xpath->query('/config/option[@name = "mappings"]')->item(0);
+        $path = $element->getAttribute('value');
+        if (realpath($path) != $path) {
+            $path = dirname($this->_xmlConfig) . DIRECTORY_SEPARATOR . $path;
+        }
+        $element->setAttribute('value', $path);
+
+        // Because this is a temp file, the full path should be set when needed.
+        $element = $xpath->query('/config/option[@name = "rules"]')->item(0);
+        $path = $element->getAttribute('value');
+        if (realpath($path) != $path) {
+            $path = dirname($this->_xmlConfig) . DIRECTORY_SEPARATOR . $path;
+        }
+        $element->setAttribute('value', $path);
+
+        return $dom->save($configuration);
     }
 
     /**
