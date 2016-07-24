@@ -185,7 +185,7 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
             return 0;
         }
 
-        // Direct query, sot need to quote result (TODO : use where()).
+        // Direct query, so need to quote result (TODO : use where()).
         $quotedPartOfs = array();
         foreach ($partOfs as $partOf) {
             $quotedPartOfs[] = $db->quote($partOf);
@@ -199,12 +199,12 @@ class Ead_View_Helper_Ead extends Zend_View_Helper_Abstract
                 AND element_texts.element_id = $this->_idIdentifier
                 AND element_texts.text IN (" . $quotedPartOfs . ")
         ";
-       $partOfIds = $db->fetchCol($sql);
+        $partOfIds = $db->fetchCol($sql);
         if (empty($partOfIds)) {
             return 0;
         }
 
-        // Direct query, sot need to quote result (TODO : use where()).
+        // Direct query, so need to quote result (TODO : use where()).
         $quotedIdentifiers = array();
         foreach ($identifiers as $identifier) {
             $quotedIdentifiers[] = $db->quote($identifier);
