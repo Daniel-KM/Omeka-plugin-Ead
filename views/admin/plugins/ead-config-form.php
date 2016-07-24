@@ -26,7 +26,7 @@
                     foreach ($display as $value) {
                         echo '<li>';
                         echo $this->formCheckbox('ead_append_to_item[]', $value,
-                            array('checked' => in_array($value, $currentDisplay) ? 'checked' : ''));
+                            array('checked' => in_array($value, $appendToItem) ? 'checked' : ''));
                         echo ucfirst($value);
                         echo '</li>';
                     }

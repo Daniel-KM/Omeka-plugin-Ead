@@ -19,6 +19,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'initialize',
         'install',
+        'upgrade',
         'uninstall',
         'uninstall_message',
         'config_form',
@@ -129,9 +130,24 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
             }
         }
 
-        $this->_options['ead_append_to_item'] = serialize(array_keys(array_filter($this->_options['ead_append_to_item'])));
+        $this->_options['ead_append_to_item'] = json_encode(array_keys(array_filter($this->_options['ead_append_to_item'])));
 
         $this->_installOptions();
+    }
+
+    /**
+     * Upgrade the plugin.
+     */
+    public function hookUpgrade($args)
+    {
+        $oldVersion = $args['old_version'];
+        $newVersion = $args['new_version'];
+        $db = $this->_db;
+
+        if (version_compare($oldVersion, '2.4.1', '<')) {
+            $appendToItem = unserialize(get_option('ead_append_to_item')) ?: array();
+            set_option('ead_append_to_item', json_encode($appendToItem));
+        }
     }
 
     /**
@@ -186,7 +202,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
             'plugins/ead-config-form.php',
             array(
                 'display' => array_keys($this->_options['ead_append_to_item']),
-                'currentDisplay' => unserialize(get_option('ead_append_to_item')) ?: array(),
+                'appendToItem' => json_decode(get_option('ead_append_to_item'), true) ?: array(),
         ));
     }
 
@@ -203,7 +219,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
                 if (in_array($optionKey, array(
                         'ead_append_to_item',
                     ))) {
-                    $post[$optionKey] = serialize($post[$optionKey]) ?: serialize(array());
+                    $post[$optionKey] = json_encode($post[$optionKey]) ?: json_encode(array());
                 }
                 set_option($optionKey, $post[$optionKey]);
             }
@@ -217,7 +233,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
         if (!$view->ead()->is_ead($item)) {
             return;
         }
-        $options = unserialize(get_option('ead_append_to_item'));
+        $options = json_decode(get_option('ead_append_to_item'), true);
         foreach ($options as $option) {
             switch ($option) {
                 case 'tree for finding aid':
