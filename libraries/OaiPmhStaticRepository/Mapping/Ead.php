@@ -15,6 +15,7 @@ class OaiPmhStaticRepository_Mapping_Ead extends OaiPmhStaticRepository_Mapping_
     protected $_formatXml = self::XML_PREFIX;
     protected $_xmlRoot = self::XML_ROOT;
     protected $_xmlNamespace = self::XML_NAMESPACE;
+    protected $_xmlPrefix = self::XML_PREFIX;
 
     protected $_xslMain = 'libraries/external/Ead2DCterms/ead2dcterms-omeka.xsl';
     protected $_xslSecondary = 'libraries/xsl/dcterms-omeka2documents.xsl';

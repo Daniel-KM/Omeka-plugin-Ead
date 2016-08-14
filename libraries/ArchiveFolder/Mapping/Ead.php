@@ -15,14 +15,12 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
     protected $_formatXml = self::XML_PREFIX;
     protected $_xmlRoot = self::XML_ROOT;
     protected $_xmlNamespace = self::XML_NAMESPACE;
+    protected $_xmlPrefix = self::XML_PREFIX;
 
     protected $_xslMain = 'libraries/external/Ead2DCterms/ead2dcterms-omeka.xsl';
     protected $_xslSecondary = 'libraries/xsl/dcterms-omeka2documents.xsl';
     protected $_xslParts = 'libraries/xsl/ead_parts.xsl';
     protected $_xmlConfig = 'libraries/external/Ead2DCterms/ead2dcterms-omeka_config.xml';
-
-    // EAD converts itself into the "documents" format.
-    private $_mappingDocument = null;
 
     public function __construct($uri, $parameters)
     {
