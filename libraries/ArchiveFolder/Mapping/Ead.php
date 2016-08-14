@@ -54,7 +54,7 @@ class ArchiveFolder_Mapping_Ead extends ArchiveFolder_Mapping_Abstract
 
         // If the xml is too large, the php memory may be increased so it can be
         // processed directly via SimpleXml.
-        $this->_xml = simplexml_load_file($this->_metadataFilepath, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+        $this->_xml = simplexml_load_file($this->_metadataFilepath, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_PARSEHUGE);
         if ($this->_xml === false) {
             $message = __('The file "%s" is not xml.', $this->_metadataFilepath);
             throw new ArchiveFolder_Exception($message);
