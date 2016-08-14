@@ -10,14 +10,17 @@ original structure can be browsed.
 Currently, this plugin is not an EAD xml editor, even if it's possible to edit
 each item.
 
-Nevertheless, the plugin allows to import and export EAD xml files via some
+Nevertheless, the plugin allows to import and to export EAD xml files via some
 other optional plugins. Mappings are ready for:
-- [OAI-PMH Static Repository] convert an EAD xml file and attached files into an
-OAI-PMH static repository, that can be managed via the plugin [OAI-PMH Gateway];
-- [OAI-PMH Harvester] import EAD metadata from OAI-PMH servers, but the
+- [Archive Folder] imports EAD xml files automatically;
+- [OAI-PMH Static Repository] converts an EAD xml file and attached files into
+an OAI-PMH static repository, that can be managed via the plugin [OAI-PMH Gateway];
+- [OAI-PMH Harvester] imports EAD metadata from OAI-PMH servers, but the
 structure is not rebuilt;
 - [OAI-PMH Repository] allows to expose EAD metadata via OAI-PMH (to be
 finished).
+
+[Archive Folder] is the recommended plugin to import EAD files.
 
 Finding aid tree, parts, upper or lower levels, etc. are automatically displayed
 in the view of each item belonging to a finding aid. Dynamic display via
@@ -35,16 +38,34 @@ Samples
 
 For testing purposes, the official EAD examples can be imported easily.
 
-- Install this plugin and all associated plugins (see below).
-- Copy the files "ead_example_1.xml" and "ead_example_2.xml" that are in the
+First, install this plugin and all associated plugins (see below).
+
+Then, copy the files "ead_example_1.xml" and "ead_example_2.xml" that are in the
 folder "samples" of the tool [Ead2DCterms] in a directory that the server can
 access (check rights).
-- Go to OAI-PMH Static Repositories > Add a new OAI-PMH Static Repository, fill
-the url to the directory where are the previous files. Default options are fine,
-but you can change them as long as you keep the format "Document" for the
-harvesting.
-- Click Add Folder, then "Check" and, if no error, "Update", and wait a minute.
-- Browse your items!
+
+Next, choose and install [Archive Folder] or [OAI-PMH Static Repository].
+
+* Example with [Archive Folder]
+
+  - Go to Archive Folders and click on "Add a new archive folder".
+  - Set the uri : `http://example.com/path/to/the/samples/'.
+  - select "One item by repository" (all files inside a subfolder belong to one
+  item);
+  - select "Dublin Core : Identifier" as Identifier field (this allows update);
+  - Click "Add Folder", then "Check" and, if no error, "Process", and wait a
+  minute.
+  - Browse your items!
+
+* Example with [OAI-PMH Static Repository]
+
+  - Go to OAI-PMH Static Repositories > Add a new OAI-PMH Static Repository,
+  fill the url to the directory where are the previous files. Default options
+  are fine, but you can change them as long as you keep the format "Document"
+  for the harvesting.
+  - Click "Add Folder", then "Check" and, if no error, "Update", and wait a
+  minute.
+  - Browse your items!
 
 
 Design Notes
@@ -134,14 +155,15 @@ Uncompress files and rename plugin folder "Ead".
 Uncheck the "html purifier" box in security settings, or allow all EAD tags and
 attributes. This allows to edit items without losing invisible EAD tags.
 
-Unzip or ungit [Ead2DCterms] inside the plugin subdirectory"libraries/external".
+Unzip or git [Ead2DCterms] inside the plugin subdirectory"libraries/external".
 Keep the main directory "Ead2DCterms".
 
 Then install it like any other Omeka plugin.
 
-To import metadata, the following recommended plugins are needed: [OAI-PMH Static Repository],
-[OAI-PMH Gateway], [OAI-PMH Harvester], [OAI-PMH Repository] and optionally
-[Archive Repertory].
+To import metadata, two plugins can be used. The recommended is to use [Archive Folder].
+The other one is [OAI-PMH Static Repository], that requires [OAI-PMH Gateway],
+[OAI-PMH Harvester], [OAI-PMH Repository]. [Archive Repertory] can be installed
+too.
 
 Note: [Dublin Core Extended], [OAI-PMH Harvester] and [OAI-PMH Repository] are
 fork of the official plugins, with some fixes and improvements that are not yet
@@ -218,6 +240,7 @@ Copyright
 [Ead]: https://github.com/Daniel-KM/Ead4Omeka
 [Omeka]: https://omeka.org
 [Encoded Archival Description]: https://loc.gov/ead/index.html
+[Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
 [OAI-PMH Static Repository]: https://github.com/Daniel-KM/OaiPmhStaticRepository
 [OAI-PMH Gateway]: https://github.com/Daniel-KM/OaiPmhGateway
 [OAI-PMH Harvester]: https://github.com/Daniel-KM/OaipmhHarvester
