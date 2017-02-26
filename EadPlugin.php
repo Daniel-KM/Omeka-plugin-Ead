@@ -2,7 +2,7 @@
 /**
  * Ead
  *
- * @copyright Copyright 2015-2016 Daniel Berthereau
+ * @copyright Copyright 2015-2017 Daniel Berthereau
  * @license https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
  */
 

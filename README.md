@@ -20,7 +20,8 @@ structure is not rebuilt;
 - [OAI-PMH Repository] allows to expose EAD metadata via OAI-PMH (to be
 finished).
 
-[Archive Folder] is the recommended plugin to import EAD files.
+[Archive Folder] is the recommended plugin to import EAD files. The other ones
+are designed for rare and specific cases.
 
 Finding aid tree, parts, upper or lower levels, etc. are automatically displayed
 in the view of each item belonging to a finding aid. Dynamic display via
@@ -234,7 +235,7 @@ Current maintainers:
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015
+* Copyright Daniel Berthereau, 2015-2017
 
 
 [Ead]: https://github.com/Daniel-KM/Ead4Omeka
