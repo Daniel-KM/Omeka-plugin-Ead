@@ -191,8 +191,8 @@ Warning
 
 Use it at your own risk.
 
-It's always recommended to backup your files and database regularly so you can
-roll back if needed.
+It’s always recommended to backup your files and your databases and to check
+your archives regularly so you can roll back if needed.
 
 
 Troubleshooting
@@ -235,16 +235,16 @@ Current maintainers:
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015-2017
+* Copyright Daniel Berthereau, 2015-2018
 
 
-[Ead]: https://github.com/Daniel-KM/Ead4Omeka
+[Ead]: https://github.com/Daniel-KM/Omeka-plugin-Ead
 [Omeka]: https://omeka.org
 [Encoded Archival Description]: https://loc.gov/ead/index.html
-[Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
-[OAI-PMH Static Repository]: https://github.com/Daniel-KM/OaiPmhStaticRepository
-[OAI-PMH Gateway]: https://github.com/Daniel-KM/OaiPmhGateway
-[OAI-PMH Harvester]: https://github.com/Daniel-KM/OaipmhHarvester
+[Archive Folder]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder
+[OAI-PMH Static Repository]: https://github.com/Daniel-KM/Omeka-plugin-OaiPmhStaticRepository
+[OAI-PMH Gateway]: https://github.com/Daniel-KM/Omeka-plugin-OaiPmhGateway
+[OAI-PMH Harvester]: https://github.com/Daniel-KM/Omeka-plugin-OaipmhHarvester
 [OAI-PMH Repository]: https://omeka.org/add-ons/plugins/oai-pmh-repository
 [Ead2DCterms]: https://github.com/Daniel-KM/Ead2DCterms
 [item Relations]: https://omeka.org/codex/Plugins/ItemRelations
@@ -252,10 +252,10 @@ Copyright
 [Dublin Core]: http://dublincore.org
 [Saxonica]: http://www.saxonica.com/download/opensource.xml
 [Saxon-C]: http://www.saxonica.com/saxon-c/index.xml
-[Dublin Core Extended]: https://github.com/Daniel-KM/DublinCoreExtended
-[Archive Document]: https://github.com/Daniel-KM/ArchiveDocument
-[Archive Repertory]: https://github.com/Daniel-KM/ArchiveRepertory
-[plugin issues]: https://github.com/Daniel-KM/Ead4Omeka/issues
+[Dublin Core Extended]: https://github.com/Daniel-KM/Omeka-plugin-DublinCoreExtended
+[Archive Document]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveDocument
+[Archive Repertory]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveRepertory
+[plugin issues]: https://github.com/Daniel-KM/Omeka-plugin-Ead/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org

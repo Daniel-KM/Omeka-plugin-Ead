@@ -12,7 +12,7 @@ The structure can't be rebuilt from partial parts without data on relations.
 @version: 20150817
 @copyright Daniel Berthereau, 2015
 @license CeCILL v2.1 http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
-@link https://github.com/Daniel-KM/Ead4Omeka
+@link https://github.com/Daniel-KM/Omeka-plugin-Ead
 -->
 <xsl:stylesheet version="2.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

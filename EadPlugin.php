@@ -78,7 +78,7 @@ class EadPlugin extends Omeka_Plugin_AbstractPlugin
             . DIRECTORY_SEPARATOR . 'ead2dcterms.xsl';
         if (!file_exists($lib)) {
             throw new Omeka_Plugin_Exception(__('EAD2DCTerms library should be installed. See %sReadme%s.',
-                '<a href="https://github.com/Daniel-KM/Ead4Omeka#installation">', '</a>'));
+                '<a href="https://github.com/Daniel-KM/Omeka-plugin-Ead#installation">', '</a>'));
         }
 
         // Load elements to add.
